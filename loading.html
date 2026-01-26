@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fresitas Loader Clone</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            background-color: rgba(0, 0, 0, 0.6); 
+        }
+
+        .ui-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px;
+            text-align: center;
+            z-index: 2;
+            color: white;
+            -webkit-text-stroke: 0.3px black;
+            paint-order: stroke fill;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9);
+        }
+
+        .status-text {
+            font-size: 14px;
+            margin-bottom: 8px;
+            letter-spacing: 0.3px;
+            min-height: 20px;
+        }
+
+        .bar-container {
+            width: 100%;
+            height: 8px;
+            background: rgb(0, 0, 0); 
+            margin: 0 auto;
+            border-radius: 2px;
+            position: relative;
+            /* overflow must be visible so the gif can sit slightly outside the bar */
+            overflow: visible; 
+        }
+
+        .bar-fill {
+            height: 100%;
+            width: 0%;
+            background: #2196F3;
+            box-shadow: 0 0 6px #2196F3;
+            transition: width 0.2s linear; 
+            position: relative;
+        }
+
+        /* The GIF/Emoji following the bar head */
+        .bar-emoji {
+            position: absolute;
+            right: -10px; /* Position it at the very tip of the fill */
+            top: -12px;   /* Center it vertically over the bar */
+            width: 30px;  /* Size of the emoji */
+            height: 30px;
+            z-index: 5;
+        }
+
+        .percentage {
+            margin-top: 6px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .hint-text {
+            margin-top: 25px;
+            font-size: 11px;
+            width: 100%;
+            line-height: 1.3;
+        }
+    </style>
+</head>
+<body onload="startLoading()">
+
+    <div class="ui-wrapper">
+        <div class="status-text" id="status">Awaiting server response...</div>
+        
+        <div class="bar-container">
+            <div class="bar-fill" id="bar">
+                <img class="bar-emoji" src="https://images-ext-1.discordapp.net/external/8gDyfPRwOyY12cIjeMLgg7wUFq1y0uim6_pRKp8s0Zs/%3Fsize%3D96%26animated%3Dtrue/https/cdn.discordapp.com/emojis/1458562808110121300.webp?animated=true">
+            </div>
+        </div>
+        
+        <div class="percentage" id="percentText">0%</div>
+
+        <div class="hint-text">
+            Did you know that - You can join our discord for customers only by pressing "Connect to discord" in settings tab?
+        </div>
+    </div>
+
+    <script>
+        function startLoading() {
+            const bar = document.getElementById('bar');
+            const text = document.getElementById('percentText');
+            const status = document.getElementById('status');
+            let progress = 0;
+            let timer = null;
+
+            function runLoader() {
+                if (progress >= 100) {
+                    clearInterval(timer);
+                    return;
+                }
+
+                progress++;
+                bar.style.width = progress + '%';
+                text.innerText = progress + '%';
+
+                if (progress === 52) {
+                    clearInterval(timer);
+                    status.innerText = "Downloading fonts...";
+                    setTimeout(() => { timer = setInterval(runLoader, 50); }, 3500); 
+                }
+                
+                else if (progress === 63) {
+                    clearInterval(timer);
+                    status.innerText = "Waiting for font to load...";
+                    setTimeout(() => {
+                        status.innerText = "Waiting for icons...";
+                        setTimeout(() => {
+                            status.innerText = "Waiting for banner to load...";
+                            timer = setInterval(runLoader, 40);
+                        }, 2000);
+                    }, 2500);
+                }
+            }
+
+            timer = setInterval(runLoader, 50);
+        }
+    </script>
+</body>
+</html>
